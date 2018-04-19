@@ -235,8 +235,8 @@ public class ExpressionManipulators {
         if(node.getName().equals("plot") && node.getChildren().size()==5) {
             AstNode function = node.getChildren().get(0);
             String var = node.getChildren().get(1).getName();
-            double varMin = node.getChildren().get(2).getNumericValue();
-            double varMax = node.getChildren().get(3).getNumericValue();
+            double varMin = toDoubleHelper(variables, node.getChildren().get(2));
+            double varMax = toDoubleHelper(variables,node.getChildren().get(3));
             double step = toDoubleHelper(variables, node.getChildren().get(4));
             if(!node.getChildren().get(1).isVariable()) {
                 throw new EvaluationError("Error: variable is not defined");
