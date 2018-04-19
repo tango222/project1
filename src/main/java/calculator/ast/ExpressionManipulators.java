@@ -70,10 +70,16 @@ public class ExpressionManipulators {
         // There are three types of nodes, so we have three cases. 
         if (node.isNumber()) {
             // TODO: your code here
-            throw new NotYetImplementedException();
+            //throw new NotYetImplementedException();
+            return node.getNumericValue();
         } else if (node.isVariable()) {
             // TODO: your code here
-            throw new NotYetImplementedException();
+            //throw new NotYetImplementedException();
+            if (!variables.containsKey(node.getName())) {
+                throw new EvaluationError("Error: one or more of the expressions contains an undefined variable.");
+            } else {
+                return toDoubleHelper(variables, variables.get(node.getName()));
+            }
         } else {
             // You may assume the expression node has the correct number of children.
             // If you wish to make your code more robust, you can also use the provided
@@ -81,7 +87,28 @@ public class ExpressionManipulators {
             String name = node.getName();
 
             // TODO: your code here
-            throw new NotYetImplementedException();
+            //throw new NotYetImplementedException();
+            if (name.equals("-")) {
+                
+            } else if (name.equals("-")) {
+                
+            } else if (name.equals("+")) {
+                
+            } else if (name.equals("/")) {
+                
+            } else if (name.equals("*")) {
+                
+            } else if (name.equals("^")) {
+                
+            } else if (name.equals("sin")) {
+                
+            } else if (name.equals("cos")) {
+                
+            } else if (name.equals("negate")) {
+                
+            } else {
+                throw new EvaluationError("Error: one or more of the expressions uses an unknown operation.");
+            }
         }
     }
 
