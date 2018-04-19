@@ -155,7 +155,6 @@ public class ExpressionManipulators {
         // throw new NotYetImplementedException();
 
         return handleSimplifyHelper(env.getVariables(), node.getChildren().get(0));
-
     }
 
     private static AstNode handleSimplifyHelper(IDictionary<String, AstNode> variables, AstNode node) {
@@ -171,23 +170,22 @@ public class ExpressionManipulators {
             IList<AstNode> simplified = new DoubleLinkedList<AstNode>();
             AstNode result = new AstNode(node.getName(), simplified);
             String name = result.getName();
-            if (result.getChildren().size() == 2
-                    && (result.getChildren().get(0).isNumber() && result.getChildren().get(1).isNumber())
-                    && (name.equals("-") || name.equals("+") || name.equals("*"))) {
-                result = new AstNode(toDoubleHelper(variables, result));
-                // double result = node.getChildren().get(0).getNumericValue()
-                // node.getChildren().get(1).getNumericValue();
-                // return handleToDouble(env)
-            }
-            if (result.getChildren().size() != 2) {
+            if (!hasTwoNumbers(result)) {
                 for (int i = 0; i < node.getChildren().size(); i++) {
                     simplified.add(handleSimplifyHelper(variables, node.getChildren().get(i)));
                 }
                 result = new AstNode(name, simplified);
             }
-
+            if (hasTwoNumbers(result) && (name.equals("+") || name.equals("-") || name.equals("*"))) {
+                result = new AstNode(toDoubleHelper(variables, result));
+            }
             return result;
         }
+    }
+
+    private static boolean hasTwoNumbers(AstNode node) {
+        return node.getChildren().size() == 2 && node.getChildren().get(0).isNumber()
+                && node.getChildren().get(1).isNumber();
     }
 
     /**
