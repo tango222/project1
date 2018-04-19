@@ -89,23 +89,26 @@ public class ExpressionManipulators {
             // TODO: your code here
             //throw new NotYetImplementedException();
             if (name.equals("-")) {
-                
-            } else if (name.equals("-")) {
-                
+                return toDoubleHelper(variables, node.getChildren().get(0))
+                        - toDoubleHelper(variables, node.getChildren().get(1));
             } else if (name.equals("+")) {
-                
+                return toDoubleHelper(variables, node.getChildren().get(0))
+                        + toDoubleHelper(variables, node.getChildren().get(1));
             } else if (name.equals("/")) {
-                
+                return toDoubleHelper(variables, node.getChildren().get(0))
+                        / toDoubleHelper(variables, node.getChildren().get(1));
             } else if (name.equals("*")) {
-                
+                return toDoubleHelper(variables, node.getChildren().get(0))
+                        * toDoubleHelper(variables, node.getChildren().get(1));
             } else if (name.equals("^")) {
-                
+                return Math.pow(toDoubleHelper(variables, node.getChildren().get(0)),
+                       toDoubleHelper(variables, node.getChildren().get(1)));
             } else if (name.equals("sin")) {
-                
+                return Math.sin(toDoubleHelper(variables, node.getChildren().get(0)));
             } else if (name.equals("cos")) {
-                
+                return Math.cos(toDoubleHelper(variables, node.getChildren().get(0)));
             } else if (name.equals("negate")) {
-                
+                return toDoubleHelper(variables, node.getChildren().get(0)) * -1;
             } else {
                 throw new EvaluationError("Error: one or more of the expressions uses an unknown operation.");
             }
@@ -148,8 +151,27 @@ public class ExpressionManipulators {
         assertNodeMatches(node, "simplify", 1);
 
         // TODO: Your code here
-        throw new NotYetImplementedException();
+        //throw new NotYetImplementedException();
+        
+        return handleSimplifyHelper(env.getVariables(), node.getChildren().get(0));
+        
     }
+    
+    public static AstNode handleSimplifyHelper(IDictionary<String, AstNode> variables, AstNode node) {
+        if (node.isNumber()) {
+            return new AstNode(node.getNumericValue());
+        } else if (node.isVariable()) {
+            if (!variables.containsKey(node.getName())) {
+                return new AstNode(node.getName());
+            } else {
+                return handleSimplifyHelper(variables, variables.get(node.getName()));
+            }
+        } else {
+            
+        }
+    }
+        
+    
 
     /**
      * Accepts an Environment variable and a 'plot(exprToPlot, var, varMin, varMax, step)'
