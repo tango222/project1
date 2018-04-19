@@ -2,6 +2,7 @@ package calculator.ast;
 
 import calculator.interpreter.Environment;
 import calculator.errors.EvaluationError;
+import calculator.gui.ImageDrawer;
 import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IDictionary;
 import datastructures.interfaces.IList;
@@ -225,19 +226,40 @@ public class ExpressionManipulators {
      */
     public static AstNode plot(Environment env, AstNode node) {
         assertNodeMatches(node, "plot", 5);
-
-        // TODO: Your code here
-        throw new NotYetImplementedException();
-
-        // Note: every single function we add MUST return an
-        // AST node that your "simplify" function is capable of handling.
-        // However, your "simplify" function doesn't really know what to do
-        // with "plot" functions (and what is the "plot" function supposed to
-        // evaluate to anyways?) so we'll settle for just returning an
-        // arbitrary number.
-        //
-        // When working on this method, you should uncomment the following line:
-        //
-        // return new AstNode(1);
+        return plotHelper(env.getVariables(), node, env.getImageDrawer());
     }
+    
+    private static AstNode plotHelper(IDictionary<String, AstNode> variables, AstNode node, ImageDrawer plot) {
+        DoubleLinkedList<Double> xValues = new DoubleLinkedList<Double>();
+        DoubleLinkedList<Double> yValues = new DoubleLinkedList<Double>();
+        if(node.getName().equals("plot") && node.getChildren().size()==5) {
+            AstNode function = node.getChildren().get(0);
+            String var = node.getChildren().get(1).getName();
+            double varMin = node.getChildren().get(2).getNumericValue();
+            double varMax = node.getChildren().get(3).getNumericValue();
+            double step = toDoubleHelper(variables, node.getChildren().get(4));
+            if(!node.getChildren().get(1).isVariable()) {
+                throw new EvaluationError("Error: variable is not defined");
+            }
+            if(varMin > varMax) {
+                throw new EvaluationError("Error: Min is greater than Max.");
+            }
+            if(variables.containsKey(var)) {
+                throw new EvaluationError("Error: variable already defined.");
+            }
+            if(step <= 0) {
+                throw new EvaluationError("Error: step is negative or 0.");
+            }
+            for(double i = varMin; i <= varMax; i+=step) {
+                xValues.add(i);
+                variables.put(var,new AstNode(i));
+                yValues.add(toDoubleHelper(variables, function));
+            }
+            variables.remove(var);
+        }
+        plot.drawScatterPlot("My Plot","x", "y", xValues, yValues);
+        return node; 
+    }
+    
+    
 }
