@@ -6,7 +6,6 @@ import calculator.gui.ImageDrawer;
 import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IDictionary;
 import datastructures.interfaces.IList;
-import misc.exceptions.NotYetImplementedException;
 
 /**
  * All of the public static methods in this class are given the exact same
@@ -71,12 +70,8 @@ public class ExpressionManipulators {
     private static double toDoubleHelper(IDictionary<String, AstNode> variables, AstNode node) {
         // There are three types of nodes, so we have three cases.
         if (node.isNumber()) {
-            // TODO: your code here
-            // throw new NotYetImplementedException();
             return node.getNumericValue();
         } else if (node.isVariable()) {
-            // TODO: your code here
-            // throw new NotYetImplementedException();
             if (!variables.containsKey(node.getName())) {
                 throw new EvaluationError("Error: one or more of the expressions contains an undefined variable.");
             } else {
@@ -87,9 +82,6 @@ public class ExpressionManipulators {
             // If you wish to make your code more robust, you can also use the provided
             // "assertNodeMatches" method to verify the input is valid.
             String name = node.getName();
-
-            // TODO: your code here
-            // throw new NotYetImplementedException();
             if (name.equals("-")) {
                 return toDoubleHelper(variables, node.getChildren().get(0))
                         - toDoubleHelper(variables, node.getChildren().get(1));
@@ -152,9 +144,6 @@ public class ExpressionManipulators {
 
         assertNodeMatches(node, "simplify", 1);
 
-        // TODO: Your code here
-        // throw new NotYetImplementedException();
-
         return handleSimplifyHelper(env.getVariables(), node.getChildren().get(0));
     }
 
@@ -177,7 +166,7 @@ public class ExpressionManipulators {
                 }
                 result = new AstNode(name, simplified);
             }
-            if (hasTwoNumbers(result) && (name.equals("+") || name.equals("-") || name.equals("*"))) {
+            if (hasTwoNumbers(result) && (name.equals("-") || name.equals("+") || name.equals("*"))) {
                 result = new AstNode(toDoubleHelper(variables, result));
             }
             return result;
@@ -228,38 +217,37 @@ public class ExpressionManipulators {
         assertNodeMatches(node, "plot", 5);
         return plotHelper(env.getVariables(), node, env.getImageDrawer());
     }
-    
+
     private static AstNode plotHelper(IDictionary<String, AstNode> variables, AstNode node, ImageDrawer plot) {
-        DoubleLinkedList<Double> xValues = new DoubleLinkedList<Double>();
-        DoubleLinkedList<Double> yValues = new DoubleLinkedList<Double>();
-        if(node.getName().equals("plot") && node.getChildren().size()==5) {
+        IList<Double> xValues = new DoubleLinkedList<Double>();
+        IList<Double> yValues = new DoubleLinkedList<Double>();
+        if (node.getName().equals("plot") && node.getChildren().size() == 5) {
             AstNode function = node.getChildren().get(0);
             String var = node.getChildren().get(1).getName();
             double varMin = toDoubleHelper(variables, node.getChildren().get(2));
-            double varMax = toDoubleHelper(variables,node.getChildren().get(3));
+            double varMax = toDoubleHelper(variables, node.getChildren().get(3));
             double step = toDoubleHelper(variables, node.getChildren().get(4));
-            if(!node.getChildren().get(1).isVariable()) {
+            if (!node.getChildren().get(1).isVariable()) {
                 throw new EvaluationError("Error: variable is not defined");
             }
-            if(varMin > varMax) {
+            if (varMin > varMax) {
                 throw new EvaluationError("Error: Min is greater than Max.");
             }
-            if(variables.containsKey(var)) {
+            if (variables.containsKey(var)) {
                 throw new EvaluationError("Error: variable already defined.");
             }
-            if(step <= 0) {
+            if (step <= 0) {
                 throw new EvaluationError("Error: step is negative or 0.");
             }
-            for(double i = varMin; i <= varMax; i+=step) {
+            for (double i = varMin; i <= varMax; i += step) {
                 xValues.add(i);
-                variables.put(var,new AstNode(i));
+                variables.put(var, new AstNode(i));
                 yValues.add(toDoubleHelper(variables, function));
             }
             variables.remove(var);
         }
-        plot.drawScatterPlot("My Plot","x", "y", xValues, yValues);
-        return node; 
+        plot.drawScatterPlot("My Plot", "x", "y", xValues, yValues);
+        return node;
     }
-    
-    
+
 }

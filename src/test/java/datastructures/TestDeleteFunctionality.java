@@ -4,10 +4,10 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import datastructures.concrete.DoubleLinkedList;
+//import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IList;
 
-import static org.junit.Assert.assertTrue;
+//import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -41,9 +41,23 @@ public class TestDeleteFunctionality extends TestDoubleLinkedList {
     }
     
     @Test(timeout=SECOND)
-    public void testDeleteOutOfBounds() {
+    public void testDeleteAndInsert() {
         IList<String> list = this.makeBasicList();
 
+        list.delete(0);
+        this.assertListMatches(new String[] {"b", "c"}, list);
+        list.insert(0, "a");
+        this.assertListMatches(new String[] {"a", "b", "c"}, list);
+        list.insert(1, "d");
+        this.assertListMatches(new String[] {"a", "d", "b", "c"}, list);
+        list.delete(3);
+        this.assertListMatches(new String[] {"a", "d", "b"}, list);
+    }
+    
+    @Test(timeout=SECOND)
+    public void testDeleteOutOfBounds() {
+        IList<String> list = this.makeBasicList();
+        
         try {
             list.delete(-1);
             fail("Expected IndexOutOfBoundsException");
@@ -57,8 +71,31 @@ public class TestDeleteFunctionality extends TestDoubleLinkedList {
             // do nothing
         }
     }
-
-    // DO WE REALLY NEED THIS TEST?
+    
+    @Test(timeout = SECOND)
+    public void testDeleteFromEmpty() {
+        IList<String> list = this.makeBasicList();
+        list.delete(0);
+        list.delete(0);
+        list.delete(0);
+        
+        try {
+            list.delete(0);
+            fail("Expected IndexOutOfBoundsException");
+        } catch (IndexOutOfBoundsException ex) {
+            // do nothing
+        }
+    }
+    
+    @Test(timeout = SECOND)
+    public void testDeleteValue() {
+        IList<String> list = this.makeBasicList();
+        
+        assertEquals(list.delete(1), "b");
+        assertEquals(list.delete(1), "c");
+        assertEquals(list.delete(0), "a");
+    }
+    
     @Test(timeout=SECOND)
     public void testDeleteEndAndSingleElement() {
         IList<String> list = this.makeBasicList();

@@ -2,14 +2,13 @@ package datastructures.concrete;
 
 import datastructures.interfaces.IList;
 import misc.exceptions.EmptyContainerException;
-import misc.exceptions.NotYetImplementedException;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Note: For more info on the expected behavior of your methods, see
- * the source code for IList.
+ * Note: For more info on the expected behavior of your methods, see the source
+ * code for IList.
  */
 public class DoubleLinkedList<T> implements IList<T> {
     private Node<T> front;
@@ -40,7 +39,7 @@ public class DoubleLinkedList<T> implements IList<T> {
             throw new EmptyContainerException();
         }
         T temp = back.data;
-        if (this.size == 1 ) {
+        if (this.size == 1) {
             back = null;
             front = null;
         } else {
@@ -52,7 +51,7 @@ public class DoubleLinkedList<T> implements IList<T> {
     }
 
     @Override
-    
+
     public T get(int index) {
         if (index < 0 || index >= this.size()) {
             throw new IndexOutOfBoundsException();
@@ -63,8 +62,8 @@ public class DoubleLinkedList<T> implements IList<T> {
 
     @Override
     public void set(int index, T item) {
-        //throw new NotYetImplementedException();
-        
+        // throw new NotYetImplementedException();
+
         if (index < 0 || index >= this.size()) {
             throw new IndexOutOfBoundsException();
         }
@@ -82,7 +81,7 @@ public class DoubleLinkedList<T> implements IList<T> {
             curr.prev.next = new Node<T>(curr.prev, item, curr.next);
             curr.next.prev = curr.prev.next;
         }
-        
+
     }
 
     @Override
@@ -104,7 +103,7 @@ public class DoubleLinkedList<T> implements IList<T> {
                 curr.prev = new Node<T>(curr.prev, item, curr);
                 curr.prev.prev.next = curr.prev;
             }
-        size++;
+            size++;
         }
     }
 
@@ -113,7 +112,7 @@ public class DoubleLinkedList<T> implements IList<T> {
         if (index < 0 || index >= this.size()) {
             throw new IndexOutOfBoundsException();
         }
-        if (size == 1 || index == this.size -1) {
+        if (size == 1 || index == this.size - 1) {
             return this.remove();
         } else {
             T del = front.data;
@@ -125,11 +124,11 @@ public class DoubleLinkedList<T> implements IList<T> {
                 curr.prev.next = curr.next;
                 curr.next.prev = curr.prev;
                 del = curr.data;
-           }
+            }
             size--;
             return del;
-       }
-   }
+        }
+    }
 
     @Override
     public int indexOf(T item) {
@@ -154,7 +153,7 @@ public class DoubleLinkedList<T> implements IList<T> {
     public boolean contains(T other) {
         return indexOf(other) != -1;
     }
-    
+
     private Node<T> nodeSearch(int i) {
         Node<T> curr = front;
         int j = 0;
@@ -183,11 +182,13 @@ public class DoubleLinkedList<T> implements IList<T> {
         public final E data;
         public Node<E> prev;
         public Node<E> next;
+
         public Node(Node<E> prev, E data, Node<E> next) {
             this.data = data;
             this.prev = prev;
             this.next = next;
         }
+
         public Node(E data) {
             this(null, data, null);
         }
